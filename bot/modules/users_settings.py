@@ -22,9 +22,7 @@ from bot.helper.ext_utils.db_handler import DbManager
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (editMessage, sendFile,
-                                                      auto_delete_message,
-                                                      sendMessage)
+from bot.helper.telegram_helper.message_utils import (editMessage, sendFile, sendMessage)
 
 handler_dict = {}
 
@@ -140,7 +138,7 @@ async def user_settings(_, message):
     if not ospath.exists(tpath):
         tpath = "https://graph.org/file/25545597de34c640b31d6.jpg"
     usetMsg = await message.reply_photo(tpath, caption=msg, reply_markup=button)
-    await auto_delete_message(message, usetMsg)
+    #await auto_delete_message(message, usetMsg)
 
 
 async def set_yt_options(_, message, pre_event):
