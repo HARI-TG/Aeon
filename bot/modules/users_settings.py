@@ -102,41 +102,41 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     buttons.ibutton("Close", f"userset {user_id} close", "footer")
     button = buttons.build_menu(2)
   
-    elif edit_type:
-        text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
-        if key == 'rcc':
-            set_exist = await aiopath.exists(rclone_path)
-            text += f"<b>rcl.conf File :</b> {'' if set_exist else 'Not'} Exists\n\n"
-        elif key == 'thumb':
-            set_exist = await aiopath.exists(thumbpath)
-            text += f"<b>Custom Thumbnail :</b> {'' if set_exist else 'Not'} Exists\n\n"
-        elif key == 'yt_opt':
-            set_exist = 'Not Exists' if (val:=user_dict.get('yt_opt', config_dict.get('YT_DLP_OPTIONS', ''))) == '' else val
-            text += f"<b>YT-DLP Options :</b> <code>{escape(set_exist)}</code>\n\n"
-        elif key in ['prefix', 'remname', 'suffix', 'lcaption', 'ldump']:
-            set_exist = 'Not Exists' if (val:=user_dict.get(key, '')) == '' else val
-            text += f"<b>Filename {fname_dict[key]} :</b> {set_exist}\n\n"
-        elif key == 'user_tds':
-            set_exist = len(val) if (val:=user_dict.get(key, False)) else 'Not Exists'
-            tds_mode = "Enabled" if user_dict.get('td_mode') else "Disabled"
-            buttons.ibutton('Disable UserTDs' if tds_mode == 'Enabled' else 'Enable UserTDs', f"userset {user_id} td_mode", "header")
-            text += f"<b>User TD Mode:</b> {tds_mode}\n"
-        else: 
-            return
-        text += f"<b>Description :</b> {uset_display_dict[key][0]}"
-        if edit_mode:
-            text += '\n\n' + uset_display_dict[key][1]
-            buttons.ibutton("Stop Change", f"userset {user_id} {key}")
-        elif key != 'user_tds' or set_exist == 'Not Exists':
-            buttons.ibutton(f"Change {fname_dict[key]}" if set_exist and set_exist != 'Not Exists' else f"Set {fname_dict[key]}", f"userset {user_id} {key} edit")
-        if set_exist and set_exist != 'Not Exists':
-            if key == 'user_tds':
-                buttons.ibutton('Show UserTDs', f"userset {user_id} show_tds", "header")
-            buttons.ibutton("Delete", f"userset {user_id} d{key}")
-        buttons.ibutton("Back", f"userset {user_id} back {edit_type}", "footer")
-        buttons.ibutton("Close", f"userset {user_id} close", "footer")
-        button = buttons.build_menu(2)
-    return text, button
+elif edit_type:
+    text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
+    if key == 'rcc':
+        set_exist = await aiopath.exists(rclone_path)
+        text += f"<b>rcl.conf File :</b> {'' if set_exist else 'Not'} Exists\n\n"
+    elif key == 'thumb':
+          set_exist = await aiopath.exists(thumbpath)
+          text += f"<b>Custom Thumbnail :</b> {'' if set_exist else 'Not'} Exists\n\n"
+    elif key == 'yt_opt':
+          set_exist = 'Not Exists' if (val:=user_dict.get('yt_opt', config_dict.get('YT_DLP_OPTIONS', ''))) == '' else val
+          text += f"<b>YT-DLP Options :</b> <code>{escape(set_exist)}</code>\n\n"
+    elif key in ['prefix', 'remname', 'suffix', 'lcaption', 'ldump']:
+          set_exist = 'Not Exists' if (val:=user_dict.get(key, '')) == '' else val
+          text += f"<b>Filename {fname_dict[key]} :</b> {set_exist}\n\n"
+    elif key == 'user_tds':
+          set_exist = len(val) if (val:=user_dict.get(key, False)) else 'Not Exists'
+          tds_mode = "Enabled" if user_dict.get('td_mode') else "Disabled"
+          buttons.ibutton('Disable UserTDs' if tds_mode == 'Enabled' else 'Enable UserTDs', f"userset {user_id} td_mode", "header")
+          text += f"<b>User TD Mode:</b> {tds_mode}\n"
+    else: 
+        return
+    text += f"<b>Description :</b> {uset_display_dict[key][0]}"
+    if edit_mode:
+        text += '\n\n' + uset_display_dict[key][1]
+        buttons.ibutton("Stop Change", f"userset {user_id} {key}")
+    elif key != 'user_tds' or set_exist == 'Not Exists':
+        buttons.ibutton(f"Change {fname_dict[key]}" if set_exist and set_exist != 'Not Exists' else f"Set {fname_dict[key]}", f"userset {user_id} {key} edit")
+    if set_exist and set_exist != 'Not Exists':
+        if key == 'user_tds':
+            buttons.ibutton('Show UserTDs', f"userset {user_id} show_tds", "header")
+    buttons.ibutton("Delete", f"userset {user_id} d{key}")
+    buttons.ibutton("Back", f"userset {user_id} back {edit_type}", "footer")
+    buttons.ibutton("Close", f"userset {user_id} close", "footer")
+    button = buttons.build_menu(2)
+return text, button
 
 
 async def update_user_settings(query, key=None, edit_type=None, edit_mode=None, msg=None):
