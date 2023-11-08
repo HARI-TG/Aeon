@@ -98,11 +98,9 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     text += f'<b>• Suffix:</b> <code>{suffix}</code>\n'
     text += f'<b>• Remname:</b> <code>{remname}</code>'
 
-    buttons.ibutton("Back", f"userset {user_id} back", "footer")
-    buttons.ibutton("Close", f"userset {user_id} close", "footer")
-    button = buttons.build_menu(2)
+    
   
-elif edit_type:
+#elif edit_type:
     text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
     if key == 'rcc':
         set_exist = await aiopath.exists(rclone_path)
@@ -136,7 +134,10 @@ elif edit_type:
     buttons.ibutton("Back", f"userset {user_id} back {edit_type}", "footer")
     buttons.ibutton("Close", f"userset {user_id} close", "footer")
     button = buttons.build_menu(2)
-return text, button
+    buttons.ibutton("Back", f"userset {user_id} back", "footer")
+    buttons.ibutton("Close", f"userset {user_id} close", "footer")
+    button = buttons.build_menu(2)
+#return text, button
 
 
 async def update_user_settings(query, key=None, edit_type=None, edit_mode=None, msg=None):
