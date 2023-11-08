@@ -98,7 +98,7 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     text += f'<b>• Suffix:</b> <code>{suffix}</code>\n'
     text += f'<b>• Remname:</b> <code>{remname}</code>'    
   
-elif edit_type:
+    elif edit_type:
     text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
     if key == 'rcc':
         set_exist = await aiopath.exists(rclone_path)
