@@ -40,11 +40,11 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     rclone_path = f'tanha/{user_id}.conf'
     user_dict = user_data.get(user_id, {})
     if user_dict.get('as_doc', False) or 'as_doc' not in user_dict and config_dict['AS_DOCUMENT']:
-      ltype = "DOCUMENT"
-            buttons.ibutton("Send As Media", f"userset {user_id} doc")
+        ltype = "DOCUMENT"
+        buttons.ibutton("Send As Media", f"userset {user_id} doc")
     else:
-         ltype = "MEDIA"
-         buttons.ibutton("Send As Document", f"userset {user_id} doc")
+        ltype = "MEDIA"
+        buttons.ibutton("Send As Document", f"userset {user_id} doc")
 
     mediainfo = "Enabled" if user_dict.get('mediainfo', config_dict['SHOW_MEDIAINFO']) else "Disabled"
     buttons.ibutton('Disable MediaInfo' if mediainfo == 'Enabled' else 'Enable MediaInfo', f"userset {user_id} mediainfo")
@@ -64,6 +64,21 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
 
     buttons.ibutton("Leech Dump", f"userset {user_id} ldump")
     ldump = 'Not Exists' if (val:=user_dict.get('ldump', '')) == '' else val
+    buttons.ibutton("YT-DLP Options", f"userset {user_id} yt_opt")
+    ytopt = 'Not Exists' if (val:=user_dict.get('yt_opt', config_dict.get('YT_DLP_OPTIONS', ''))) == '' else val
+    buttons.ibutton("Prefix", f"userset {user_id} prefix")
+    prefix = user_dict.get('prefix', 'Not Exists')
+
+    buttons.ibutton("Suffix", f"userset {user_id} suffix")
+    suffix = user_dict.get('suffix', 'Not Exists')
+
+    buttons.ibutton("Remname", f"userset {user_id} remname")
+    remname = user_dict.get('remname', 'Not Exists')
+    buttons.ibutton("RClone", f"userset {user_id} rcc")
+    rccmsg = "Exists" if await aiopath.exists(rclone_path) else "Not Exists"
+    tds_mode = "Enabled" if user_dict.get('td_mode') else "Disabled"
+    user_tds = len(val) if (val := user_dict.get('user_tds', False)) else 0
+    buttons.ibutton("User TDs", f"userset {user_id} user_tds")
 
     SPLIT_SIZE = '4GB' if IS_PREMIUM_USER else '2GB'
     text = f'<b>Leech Settings for {name}</b>\n\n'
@@ -74,6 +89,14 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     text += f'<b>• Leech Caption:</b> <code>{escape(lcaption)}</code>\n'
     text += f'<b>• Leech Dump:</b> <code>{ldump}</code>\n'
     text += f'<b>• MediaInfo Mode:</b> <code>{mediainfo}</code>'
+    text = f'<b>Mirror Settings for {name}</b>\n\n'
+    text += f'<b>• Rclone Config:</b> {rccmsg}\n'
+    text += f'<b>• User TD Mode:</b> {tds_mode}'
+    text = f'<b>Universal Settings for {name}</b>\n\n'
+    text += f'<b>• YT-DLP Options:</b> <b><code>{ytopt}</code></b>\n'
+    text += f'<b>• Prefix:</b> <code>{prefix}</code>\n'
+    text += f'<b>• Suffix:</b> <code>{suffix}</code>\n'
+    text += f'<b>• Remname:</b> <code>{remname}</code>'
 
     buttons.ibutton("Back", f"userset {user_id} back", "footer")
     buttons.ibutton("Close", f"userset {user_id} close", "footer")
@@ -142,7 +165,7 @@ async def set_yt_options(client, message, pre_event):
     value = message.text
     update_user_ldata(user_id, 'yt_opt', value)
     await message.delete()
-    await update_user_settings(pre_event, 'yt_opt', 'universal')
+    await update_user_settings(pre_event, 'yt_opt')
     if DATABASE_URL:
         await DbManager().update_user_data(user_id)
 
@@ -151,7 +174,7 @@ async def set_custom(client, message, pre_event, key):
     user_id = message.from_user.id
     handler_dict[user_id] = False
     value = message.text
-    return_key = 'leech'
+    return_key = ''
     n_key = key
     user_dict = user_data.get(user_id, {})
     if key == 'user_tds':
@@ -170,7 +193,7 @@ async def set_custom(client, message, pre_event, key):
                 if await sync_to_async(GoogleDriveHelper().getFolderData, td_details[1]):
                     user_tds[td_details[0]] = {'drive_id': td_details[1],'index_link': td_details[2].rstrip('/') if len(td_details) > 2 else ''}
         value = user_tds
-        return_key = 'mirror'
+        return_key = 'r'
     update_user_ldata(user_id, n_key, value)
     await message.delete()
     await update_user_settings(pre_event, key, return_key, msg=message)
@@ -190,7 +213,7 @@ async def set_thumb(client, message, pre_event, key):
     await aioremove(photo_dir)
     update_user_ldata(user_id, 'thumb', des_dir)
     await message.delete()
-    await update_user_settings(pre_event, key, 'leech', msg=message)
+    await update_user_settings(pre_event, key, msg=message)
     if DATABASE_URL:
         await DbManager().update_user_doc(user_id, 'thumb', des_dir)
 
@@ -205,7 +228,7 @@ async def add_rclone(client, message, pre_event):
     await message.download(file_name=des_dir)
     update_user_ldata(user_id, 'rclone', f'tanha/{user_id}.conf')
     await message.delete()
-    await update_user_settings(pre_event, 'rcc', 'mirror')
+    await update_user_settings(pre_event, 'rcc')
     if DATABASE_URL:
         await DbManager().update_user_doc(user_id, 'rclone', des_dir)
 
