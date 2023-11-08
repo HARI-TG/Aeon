@@ -96,8 +96,9 @@ async def get_user_settings(from_user, key=None, edit_mode=None):
     text += f'<b>• YT-DLP Options:</b> <b><code>{ytopt}</code></b>\n'
     text += f'<b>• Prefix:</b> <code>{prefix}</code>\n'
     text += f'<b>• Suffix:</b> <code>{suffix}</code>\n'
-    text += f'<b>• Remname:</b> <code>{remname}</code>'    
-    text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
+    text += f'<b>• Remname:</b> <code>{remname}</code>'
+  
+    """text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
     if key == 'rcc':
         set_exist = await aiopath.exists(rclone_path)
         text += f"<b>rcl.conf File :</b> {'' if set_exist else 'Not'} Exists\n\n"
@@ -129,7 +130,7 @@ async def get_user_settings(from_user, key=None, edit_mode=None):
     buttons.ibutton("Delete", f"userset {user_id} d{key}")
     buttons.ibutton("Back", f"userset {user_id} back {edit_type}", "footer")
     buttons.ibutton("Close", f"userset {user_id} close", "footer")
-    button = buttons.build_menu(2)
+    button = buttons.build_menu(2)"""
     buttons.ibutton("Back", f"userset {user_id} back", "footer")
     buttons.ibutton("Close", f"userset {user_id} close", "footer")
     button = buttons.build_menu(2)
