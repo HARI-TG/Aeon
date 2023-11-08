@@ -32,7 +32,7 @@ fname_dict = {'rcc': 'RClone',
               'thumb': 'Thumbnail',
               'yt_opt': 'YT-DLP Options'}
 
-async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None):
+async def get_user_settings(from_user, key=None, edit_mode=None):
     user_id = from_user.id
     name = from_user.mention(style="html")
     buttons = ButtonMaker()
@@ -97,8 +97,6 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
     text += f'<b>• Prefix:</b> <code>{prefix}</code>\n'
     text += f'<b>• Suffix:</b> <code>{suffix}</code>\n'
     text += f'<b>• Remname:</b> <code>{remname}</code>'    
-  
-    elif edit_type:
     text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
     if key == 'rcc':
         set_exist = await aiopath.exists(rclone_path)
@@ -138,7 +136,7 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
 #return text, button
 
 
-async def update_user_settings(query, key=None, edit_type=None, edit_mode=None, msg=None):
+async def update_user_settings(query, key=None, edit_mode=None, msg=None):
     msg, button = await get_user_settings(query.from_user, key, edit_type, edit_mode)
     user_id = query.from_user.id
     thumbnail = f"Thumbnails/{user_id}.jpg"
